@@ -1,0 +1,156 @@
+<html><body><p>Yes, there are excellent tools and workflows to create a website for
+browsing Markdown (<code>.md</code>) files—even recursively through
+folders. Since you know Python, you have several great options. Below
+are <strong>approaches</strong> and <strong>tools</strong> you can
+use:</p>
+<p>C:</p>
+<hr />
+<h2 id="goal">✅ Goal</h2>
+<p>You want to:</p>
+<ol type="1">
+<li>Convert Markdown files to HTML.</li>
+<li>Retain folder structure (subfolders).</li>
+<li>Create a browsable website.</li>
+<li>Preferably, automate it with Python.</li>
+</ol>
+<hr />
+<h2 id="option-1-use-a-static-site-generator-recommended">🔧 Option 1:
+Use a Static Site Generator (Recommended)</h2>
+<h3 id="mkdocs-best-for-documentation-style-sites">1.
+<strong>MkDocs</strong> (Best for documentation-style sites)</h3>
+<ul>
+<li><p><strong>Language</strong>: Python</p></li>
+<li><p><strong>Features</strong>:</p>
+<ul>
+<li>Recursively handles folders.</li>
+<li>Converts <code>.md</code> to a full navigable site.</li>
+<li>Built-in themes, search, plugins.</li>
+</ul></li>
+<li><p><strong>Install</strong>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install mkdocs</span></code></pre></div></li>
+<li><p><strong>Setup</strong>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mkdocs</span> new my-site</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-site</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Replace the docs folder with your Markdown folder</span></span></code></pre></div></li>
+<li><p><strong>Build &amp; Serve</strong>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mkdocs</span> serve  <span class="co"># For local preview</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mkdocs</span> build  <span class="co"># Builds static HTML in the &#39;site/&#39; folder</span></span></code></pre></div></li>
+</ul>
+<h3 id="optional-enhancements">Optional Enhancements:</h3>
+<ul>
+<li><p>Use <strong>Material for MkDocs</strong> for beautiful
+design:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install mkdocs-material</span></code></pre></div></li>
+</ul>
+<hr />
+<h3 id="staticjinja-python-templating-markdown">2.
+<strong>Staticjinja</strong> (Python templating + Markdown)</h3>
+<ul>
+<li>More flexible if you want custom HTML templates.</li>
+<li>Parse Markdown and render using Jinja2.</li>
+<li>You’ll write a small Python script to walk directories.</li>
+</ul>
+<p><strong>Example Python script</strong>:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> markdown</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jinja2 <span class="im">import</span> Environment, FileSystemLoader</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>env <span class="op">=</span> Environment(loader<span class="op">=</span>FileSystemLoader(<span class="st">&#39;templates&#39;</span>))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convert_md_to_html(src_dir, dst_dir):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> root, dirs, files <span class="kw">in</span> os.walk(src_dir):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        rel_path <span class="op">=</span> os.path.relpath(root, src_dir)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        os.makedirs(os.path.join(dst_dir, rel_path), exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> files:</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">file</span>.endswith(<span class="st">&#39;.md&#39;</span>):</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                <span class="cf">with</span> <span class="bu">open</span>(os.path.join(root, <span class="bu">file</span>), <span class="st">&#39;r&#39;</span>) <span class="im">as</span> f:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                    html <span class="op">=</span> markdown.markdown(f.read())</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                template <span class="op">=</span> env.get_template(<span class="st">&#39;page.html&#39;</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>                output <span class="op">=</span> template.render(content<span class="op">=</span>html)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                out_path <span class="op">=</span> os.path.join(dst_dir, rel_path, <span class="bu">file</span>.replace(<span class="st">&#39;.md&#39;</span>, <span class="st">&#39;.html&#39;</span>))</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                <span class="cf">with</span> <span class="bu">open</span>(out_path, <span class="st">&#39;w&#39;</span>) <span class="im">as</span> f:</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>                    f.write(output)</span></code></pre></div>
+<p>You’ll need a <code>templates/page.html</code> file for layout.</p>
+<hr />
+<h2 id="other-tools-you-could-try">🛠 Other Tools You Could Try</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 59%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Language</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Jekyll</strong></td>
+<td>Blog/docs generator used by GitHub Pages</td>
+<td>Ruby</td>
+</tr>
+<tr>
+<td><strong>Hugo</strong></td>
+<td>Super fast static site generator</td>
+<td>Go</td>
+</tr>
+<tr>
+<td><strong>Docsify</strong></td>
+<td>Client-side Markdown site generator</td>
+<td>JS</td>
+</tr>
+<tr>
+<td><strong>Obsidian Publish</strong></td>
+<td>If you’re using Obsidian, this is easiest</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="if-you-want-a-simple-script-minimal-html">🧪 If You Want a
+Simple Script (Minimal HTML)</h2>
+<p>Here’s a basic Python script:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> markdown</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> convert_all_md(base_path):</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> root, _, files <span class="kw">in</span> os.walk(base_path):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> files:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">file</span>.endswith(<span class="st">&quot;.md&quot;</span>):</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                md_path <span class="op">=</span> os.path.join(root, <span class="bu">file</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                html_path <span class="op">=</span> md_path.replace(<span class="st">&quot;.md&quot;</span>, <span class="st">&quot;.html&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                <span class="cf">with</span> <span class="bu">open</span>(md_path, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                    text <span class="op">=</span> f.read()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                html <span class="op">=</span> markdown.markdown(text)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                <span class="cf">with</span> <span class="bu">open</span>(html_path, <span class="st">&quot;w&quot;</span>) <span class="im">as</span> f:</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                    f.write(<span class="ss">f&quot;&lt;html&gt;&lt;body&gt;</span><span class="sc">{</span>html<span class="sc">}</span><span class="ss">&lt;/body&gt;&lt;/html&gt;&quot;</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>convert_all_md(<span class="st">&quot;your_folder&quot;</span>)</span></code></pre></div>
+<hr />
+<h2 id="best-approach-for-you">💡 Best Approach for You</h2>
+<p>Since you know Python and want a user-friendly browsing
+experience:</p>
+<blockquote>
+<p>✅ <strong>Use <code>MkDocs</code> or <code>MkDocs + Material</code>
+theme</strong></p>
+</blockquote>
+<p>It gives you:</p>
+<ul>
+<li>Searchable sidebar navigation</li>
+<li>Folder mapping</li>
+<li>Easy deploy via GitHub Pages or static file hosting</li>
+</ul>
+<hr />
+<p>Would you like help bootstrapping a working MkDocs setup or creating
+a custom Python HTML browser?</p>
+</body></html>
