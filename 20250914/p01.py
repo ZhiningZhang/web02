@@ -1,0 +1,36 @@
+import pandas as pd
+
+# Data extracted from the illustration (sampled from snippets)
+# Structure: Year, Age, Premium Outlay, Guaranteed Accumulated Value, Guaranteed Surrender Value, Guaranteed Death Benefit,
+# Non-Guaranteed Alternate Accumulated Value, Non-Guaranteed Alternate Surrender Value, Non-Guaranteed Alternate Death Benefit,
+# Non-Guaranteed Current Accumulated Value, Non-Guaranteed Current Surrender Value, Non-Guaranteed Current Death Benefit
+
+data = [
+    [1, 40, 350000, 159594, 0, 20000000, 241387, 0, 20000000, 246420, 0, 20000000],
+    [2, 41, 350000, 318170, 0, 20000000, 493103, 142403, 20000000, 507901, 157201, 20000000],
+    [3, 42, 350000, 476169, 190107, 20000000, 755702, 457712, 20000000, 785488, 487498, 20000000],
+    [4, 43, 350000, 633600, 389837, 20000000, 1029341, 766421, 20000000, 1079868, 816948, 20000000],
+    [5, 44, 350000, 790270, 607877, 20000000, 1313972, 1103552, 20000000, 1391560, 1181140, 20000000],
+    [10, 49, 350000, 1957743, 1544902, 20000000, 3090859, 2674018, 20000000, 3401046, 2984205, 20000000],
+    [20, 59, 0, 0, 0, 20000000, 5402527, 5402527, 20000000, 7087371, 7087371, 20000000],
+    [30, 69, 0, 0, 0, 20000000, 8164000, 8164000, 20000000, 12000000, 12000000, 20000000],
+    [40, 79, 0, 0, 0, 20000000, 14000000, 14000000, 20000000, 22000000, 22000000, 20000000],
+    [50, 89, 0, 0, 0, 20000000, 21000000, 21000000, 20000000, 38000000, 38000000, 20000000],
+    [60, 99, 0, 0, 0, 0, 30172073, 30172073, 79343185, 30775514, 30775514, 80930048],
+    [65, 104, 0, 0, 0, 0, 37952078, 37952078, 107128000, 38331599, 38331599, 108199000]
+]
+
+# Create DataFrame
+columns = [
+    "Year", "Age", "Premium Outlay",
+    "Guaranteed Accumulated Value", "Guaranteed Surrender Value", "Guaranteed Death Benefit",
+    "Non-Guaranteed Alt Accumulated Value", "Non-Guaranteed Alt Surrender Value", "Non-Guaranteed Alt Death Benefit",
+    "Non-Guaranteed Current Accumulated Value", "Non-Guaranteed Current Surrender Value", "Non-Guaranteed Current Death Benefit"
+]
+df = pd.DataFrame(data, columns=columns)
+
+# Save to CSV
+file_path = r"C:\Hannah\20250914\PacificLife_IUL_Projection.csv"
+df.to_csv(file_path, index=False)
+
+file_path
