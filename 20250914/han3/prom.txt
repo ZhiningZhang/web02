@@ -1,0 +1,5 @@
+整理成一个 PPT 表格 或者 Markdown 知识库笔记
+
+what is '非保证当前 (Non-Guaranteed Current Scale)'
+please explain to me in details, and give me some examples to help me understand.
+
